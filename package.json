@@ -1,0 +1,21 @@
+{
+  "name": "askthecompiler",
+  "version": "1.0.0",
+  "description": "Heaven for Competitive Programming / DSA Lovers and Development lovers , ask your questions , answer questions , be it theoretical , conceptual or even code - based . Solve each other's doubts and help growing the CP / Dev communities &lt;3",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ace-suyash/AskTheCompiler.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ace-suyash/AskTheCompiler/issues"
+  },
+  "homepage": "https://github.com/ace-suyash/AskTheCompiler#readme"
+}
