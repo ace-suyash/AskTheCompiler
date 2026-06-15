@@ -1,6 +1,6 @@
 import User from '../models/User.models.js';
-import Question from '../models/Question.js';
-import Answer from '../models/Answer.js';
+import Question from '../models/Question.models.js';
+import Answer from '../models/Answer.models.js';
 import { ApiError } from '../utils/ApiError.js';
 
 export const getUserProfile = async (userId) => {
