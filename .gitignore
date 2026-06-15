@@ -1,0 +1,27 @@
+#dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+
+#venv
+comp/
+
+#environment variables
+.env
+server/.env
+client/.env
+
+#build output
+client/dist/
+
+#logs
+*.log
+npm-debug.log*
+
+#oS
+.DS_Store
+Thumbs.db
+
+#editor
+.vscode/
+.idea/
