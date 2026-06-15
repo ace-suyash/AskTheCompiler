@@ -1,4 +1,4 @@
-import Question from '../models/Question.js';
+import Question from '../models/Question.models.js';
 import { ApiError } from '../utils/ApiError.js';
 import { isOnTopic } from './moderation.service.js';
 
