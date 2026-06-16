@@ -40,22 +40,37 @@ export default function Navbar() {
         </form>
 
         {/* Right side */}
-        <div className="flex items-center gap-3 shrink-0">
+        <div className="flex items-center gap-5 shrink-0">
           {isAuthenticated ? (
             <>
               <Link to="/ask" className="btn-primary text-sm hidden sm:block">
                 Ask Question
               </Link>
-              <Link to="/messages" className="text-sm text-gray-400 hover:text-white transition-colors">
-                Messages
-              </Link>
-              <div className="flex items-center gap-2">
-                <Link
-                  to={`/users/${user?._id}`}
-                  className="text-sm text-gray-400 hover:text-white transition-colors hidden md:block"
-                >
-                  {user?.username}
+              {/* <button className="flex px-4 py-1.5 text-sm  transition-colors bg-green-600 rounded-lg">
+                <Link to="/messages" className="text-white  hover:text-yellow-400">
+                  Messages
                 </Link>
+              </button> */}
+              <Link to="/messages" className="btn-primary text-sm hidden sm:block hover:bg-green-500">
+                  Messages
+                </Link>
+
+              <div className="flex items-center gap-5">
+                {/* <button  className="flex px-4 py-1.5 text-sm  transition-colors bg-green-600 rounded-lg">
+                    <Link
+                    to={`/users/${user?._id}`}
+                    className="text-sm text-white hover:text-yellow-400 transition-colors hidden md:block"
+                  >
+                    {user?.username}
+                  </Link>
+                </button> */}
+
+                  <Link
+                      to={`/users/${user?._id}`}
+                      className="btn-primary text-sm hidden sm:block hover:bg-green-500"
+                    >
+                      {user?.username}
+                    </Link>
                 <button
                   onClick={handleLogout}
                   className="text-sm text-gray-400 hover:text-white transition-colors"

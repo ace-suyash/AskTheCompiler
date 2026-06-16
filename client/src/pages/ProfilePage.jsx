@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios.js';
 import { useAuthStore } from '../store/authStore.js';
+import { ArrowUp, ArrowDown } from 'lucide-react';
 
 function StatCard({ label, value }) {
   return (
@@ -181,10 +182,28 @@ export default function ProfilePage() {
           <StatCard label="Net votes" value={stats.netScore} />
         </div>
         {isOwner && (
+
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3">
-            <StatCard label="Upvotes received" value={stats.totalUpvotes} />
-            <StatCard label="Downvotes received" value={stats.totalDownvotes} />
-            <StatCard label="Accepted answers" value={stats.acceptedAnswersCount} />
+            <StatCard 
+              label={
+                <span className="flex items-center gap-2 text-green-500">
+                  Upvotes <ArrowUp size={32} strokeWidth={3} />
+                </span>
+              } 
+              value={stats.totalUpvotes} 
+            />
+            <StatCard 
+              label={
+                <span className="flex items-center gap-2 text-red-500">
+                  Downvotes <ArrowDown size={32} strokeWidth={3} />
+                </span>
+              } 
+              value={stats.totalDownvotes} 
+            />
+            <StatCard 
+              label="Accepted answers" 
+              value={stats.acceptedAnswersCount} 
+            />
           </div>
         )}
       </div>

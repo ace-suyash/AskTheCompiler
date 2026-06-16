@@ -123,7 +123,7 @@ export default function AskQuestionPage() {
     <div className="max-w-3xl">
       <button
         onClick={() => navigate(-1)}
-        className="text-gray-400 hover:text-white text-sm mb-3 inline-flex items-center gap-1"
+        className="btn-primary text-sm hidden sm:block"
       >
         ← Back
       </button>
