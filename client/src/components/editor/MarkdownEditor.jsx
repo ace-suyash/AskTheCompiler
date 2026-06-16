@@ -12,6 +12,11 @@ export default function MarkdownEditor({
   const uploadingRef = useRef(false);
   const [showCodeModal, setShowCodeModal] = useState(false);
 
+  
+  // Appends a fenced code block (from CodeInsertModal) to the markdown
+  const handleCodeInsert = useCallback((fencedCode) => {
+    onChange((prev) => (prev || '') + fencedCode);
+  }, [onChange]);
 
   const uploadImageToCloudinary = async (file) => {
     const formData = new FormData();
@@ -80,7 +85,54 @@ export default function MarkdownEditor({
 
   return (
     <div>
-      {/* please complete the MarkdownEditor component */}
+      {/* Toolbar above editor */}
+      <div className="flex justify-end mb-1.5">
+        <button
+          type="button"
+          onClick={() => setShowCodeModal(true)}
+          className="text-xs font-medium text-gray-400 hover:text-brand-500
+                     border border-gray-700 hover:border-brand-600 rounded-md
+                     px-2.5 py-1 transition-colors"
+        >
+          {'</> Insert Code'}
+        </button>
+      </div>
+
+      <div data-color-mode="dark" className="rounded-lg overflow-hidden border border-gray-700">
+        <MDEditor
+          value={value}
+          onChange={onChange}
+          height={minHeight}
+          preview="edit"
+          textareaProps={{ placeholder }}
+
+          // Intercept paste (ctrl+V with an image in clipboard)
+          onPaste={async (event) => {
+            const files = getImageFiles(event.clipboardData);
+            if (files.length > 0) {
+              event.preventDefault();
+              await handleImageEvent(event.clipboardData);
+            }
+          }}
+
+          // Intercept drop (drag n drop)
+          onDrop={async (event) => {
+            const files = getImageFiles(event.dataTransfer);
+            if (files.length > 0) {
+              event.preventDefault();
+              await handleImageEvent(event.dataTransfer);
+            }
+          }}
+        />
+      </div>
+
+      {/* Code insert modal */}
+      {showCodeModal && (
+        <CodeInsertModal
+          onInsert={handleCodeInsert}
+          onClose={() => setShowCodeModal(false)}
+        />
+      )}
     </div>
   );
 }
