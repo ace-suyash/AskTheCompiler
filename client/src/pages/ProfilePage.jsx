@@ -55,7 +55,7 @@ function AnswerRow({ a }) {
 
 export default function ProfilePage() {
   const { id } = useParams();
-  const { user: currentUser, logout, isAuthenticated } = useAuthStore();
+  const { user: currentUser, isAuthenticated } = useAuthStore();
   const navigate = useNavigate();
 
   const [data, setData] = useState(null);
@@ -64,6 +64,7 @@ export default function ProfilePage() {
   const [deleteConfirm, setDeleteConfirm] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState('');
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -80,15 +81,39 @@ export default function ProfilePage() {
     fetchProfile();
   }, [id]);
 
+  // start deleting process
+  const openDeleteModal = () => {
+    setDeleteConfirm('');
+    setDeleteError('');
+    setShowDeleteModal(true);
+  };
+
+  const closeDeleteModal = () => {
+    if (deleting) return;
+    setShowDeleteModal(false);
+    setDeleteError('');
+    setDeleteConfirm('');
+  };
+
   const handleDeleteAccount = async () => {
-    if (deleteConfirm !== 'DELETE') return;
+    if (deleteConfirm.trim() !== 'DELETE') {
+      setDeleteError('Please type DELETE exactly as shown to confirm.');
+      return;
+    }
+    setDeleteError('');
     setDeleting(true);
     try {
       await api.delete('/users/me');
-      await logout();
+      useAuthStore.getState().clearUser();
       navigate('/');
     } catch (err) {
-      console.error(err);
+      // in-case of problem in deleting
+      const message =
+        err.response?.data?.message ||
+        err.message ||
+        'Could not delete account. Please try again.';
+      setDeleteError(message);
+      console.error('Delete account failed:', err);
     } finally {
       setDeleting(false);
     }
@@ -129,7 +154,7 @@ export default function ProfilePage() {
 
         {isOwner ? (
           <button
-            onClick={() => setShowDeleteModal(true)}
+            onClick={openDeleteModal}
             className="text-xs text-red-400 hover:text-red-300 border border-red-900 hover:border-red-700 rounded-lg px-3 py-1.5 transition-colors shrink-0"
           >
             Delete Account
@@ -208,16 +233,25 @@ export default function ProfilePage() {
               value={deleteConfirm}
               onChange={(e) => setDeleteConfirm(e.target.value)}
               placeholder="DELETE"
+              autoComplete="off"
               className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm
-                         text-gray-200 mb-4 focus:outline-none focus:ring-2 focus:ring-red-600"
+                         text-gray-200 mb-2 focus:outline-none focus:ring-2 focus:ring-red-600"
             />
+            {deleteError && (
+              <p className="text-xs text-red-400 mb-3" role="alert">{deleteError}</p>
+            )}
+            {!deleteError && <div className="mb-3" />}
             <div className="flex justify-end gap-2">
-              <button onClick={() => setShowDeleteModal(false)} className="btn-secondary text-sm">
+              <button
+                onClick={closeDeleteModal}
+                disabled={deleting}
+                className="btn-secondary text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              >
                 Cancel
               </button>
               <button
                 onClick={handleDeleteAccount}
-                disabled={deleteConfirm !== 'DELETE' || deleting}
+                disabled={deleteConfirm.trim() !== 'DELETE' || deleting}
                 className="bg-red-700 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-lg
                            disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
