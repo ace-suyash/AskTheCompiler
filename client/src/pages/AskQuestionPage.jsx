@@ -157,6 +157,7 @@ export default function AskQuestionPage() {
             Body <span className="text-gray-500 font-normal">— include all relevant code and error messages</span>
           </label>
           <MarkdownEditor value={body} onChange={setBody} />
+          <MarkdownEditor value={body} onChange={setBody} />
           <p className="text-xs text-gray-600 mt-2">
             💡 Tip: Paste or drag images directly into the editor — they'll upload automatically.
           </p>
