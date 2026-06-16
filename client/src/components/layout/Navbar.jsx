@@ -46,24 +46,13 @@ export default function Navbar() {
               <Link to="/ask" className="btn-primary text-sm hidden sm:block">
                 Ask Question
               </Link>
-              {/* <button className="flex px-4 py-1.5 text-sm  transition-colors bg-green-600 rounded-lg">
-                <Link to="/messages" className="text-white  hover:text-yellow-400">
-                  Messages
-                </Link>
-              </button> */}
+              {/* messages */}
               <Link to="/messages" className="btn-primary text-sm hidden sm:block hover:bg-green-500">
                   Messages
                 </Link>
 
               <div className="flex items-center gap-5">
-                {/* <button  className="flex px-4 py-1.5 text-sm  transition-colors bg-green-600 rounded-lg">
-                    <Link
-                    to={`/users/${user?._id}`}
-                    className="text-sm text-white hover:text-yellow-400 transition-colors hidden md:block"
-                  >
-                    {user?.username}
-                  </Link>
-                </button> */}
+                {/* username */}
 
                   <Link
                       to={`/users/${user?._id}`}
@@ -71,6 +60,7 @@ export default function Navbar() {
                     >
                       {user?.username}
                     </Link>
+                {/* logout */}
                 <button
                   onClick={handleLogout}
                   className="text-sm text-gray-400 hover:text-white transition-colors"
