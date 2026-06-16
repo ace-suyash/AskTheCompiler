@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios.js';
 import { TECH_TAGS } from '../data/techTags.js';
+import MarkdownEditor from '../components/editor/MarkdownEditor.jsx';
 
 function TagInput({ tags, onChange }) {
   const [input, setInput] = useState('');
@@ -155,7 +156,7 @@ export default function AskQuestionPage() {
           <label className="block text-sm font-medium text-gray-300 mb-2">
             Body <span className="text-gray-500 font-normal">— include all relevant code and error messages</span>
           </label>
-          {/* a markdown editor would be here */}
+          <MarkdownEditor value={body} onChange={setBody} />
           <p className="text-xs text-gray-600 mt-2">
             💡 Tip: Paste or drag images directly into the editor — they'll upload automatically.
           </p>

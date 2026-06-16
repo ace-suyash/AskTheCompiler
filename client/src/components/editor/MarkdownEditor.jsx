@@ -1,6 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
 import MDEditor from '@uiw/react-md-editor';
 import api from '../../api/axios.js';
+import CodeInsertModal from './CodeInsertModal.jsx';
 
 export default function MarkdownEditor({
   value,
