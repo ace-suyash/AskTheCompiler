@@ -3,6 +3,18 @@ import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import api from '../api/axios.js';
 import { useAuthStore } from '../store/authStore.js';
 
+const buildPreview = (body = '') =>
+  body
+    .replace(/```[\s\S]*?```/g, ' ')          // fenced code blocks
+    .replace(/`[^`]*`/g, ' ')                 // inline code
+    .replace(/!\[([^\]]*)\]\([^)]*\)/g, '')   // ![alt](url) images
+    .replace(/<img\b[^>]*>/gi, '')            // raw <img> tags
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')  // [text](url) → text
+    .replace(/https?:\/\/\S+\.(?:png|jpe?g|gif|webp|svg|bmp|avif)(?:\?[^\s]*)?/gi, '') // bare image URLs
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 150);
+
 function QuestionCard({ question }) {
   const score = (question.upvotes?.length || 0) - (question.downvotes?.length || 0);
   const hasAccepted = !!question.acceptedAnswer;
@@ -39,7 +51,7 @@ function QuestionCard({ question }) {
             {question.title}
           </Link>
           <p className="text-gray-500 text-sm mt-1 line-clamp-2">
-            {question.body.replace(/```[\s\S]*?```/g, '[code]').slice(0, 150)}
+            {buildPreview(question.body)}
           </p>
           <div className="flex flex-wrap items-center gap-2 mt-3">
             {question.tags?.map((tag) => (
