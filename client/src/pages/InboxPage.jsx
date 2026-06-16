@@ -54,7 +54,7 @@ export default function InboxPage() {
                 </p>
               </div>
               <span className="text-xs text-gray-600 shrink-0">
-                {new Date(conv.lastMessageAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                {new Date(conv.lastMessage.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </span>
             </Link>
           ))}

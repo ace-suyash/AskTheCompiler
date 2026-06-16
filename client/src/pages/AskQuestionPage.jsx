@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import api from '../api/axios.js';
 import { TECH_TAGS } from '../data/techTags.js';
 import MarkdownEditor from '../components/editor/MarkdownEditor.jsx';
- 
+
 function TagInput({ tags, onChange }) {
   const [input, setInput] = useState('');
   const [suggestions, setSuggestions] = useState([]);
