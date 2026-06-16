@@ -10,6 +10,5 @@ router.get('/:id', questionController.getQuestionById);
 
 router.post('/', authMiddleware, questionController.createQuestion);
 router.post('/:id/vote', authMiddleware, questionController.voteQuestion);
-router.post('/:id/flag', authMiddleware, questionController.flagQuestion);
 
 export default router;

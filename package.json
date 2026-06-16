@@ -4,6 +4,8 @@
   "description": "Heaven for Competitive Programming / DSA Lovers and Development lovers , ask your questions , answer questions , be it theoretical , conceptual or even code - based . Solve each other's doubts and help growing the CP / Dev communities &lt;3",
   "main": "index.js",
   "scripts": {
+    "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "install:all": "npm install && npm install --prefix server && npm install --prefix client",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/ace-suyash/AskTheCompiler/issues"
   },
-  "homepage": "https://github.com/ace-suyash/AskTheCompiler#readme"
+  "homepage": "https://github.com/ace-suyash/AskTheCompiler#readme",
+  "devDependencies": {
+    "concurrently": "^10.0.3"
+  }
 }
