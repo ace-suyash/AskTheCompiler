@@ -13,9 +13,19 @@ const loginLimiter = rateLimit({
   legacyHeaders: false,
 });
 
+const otpLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: { success: false, message: 'Too many OTP attempts. Please try again in 15 minutes.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 router.post('/register', authController.register);
 router.post('/login', loginLimiter, authController.login);
 router.post('/logout', authController.logout);
 router.get('/me', authMiddleware, authController.getMe);
+router.post('/verify-otp', otpLimiter, authController.verifyOtp);
+router.post('/resend-otp', otpLimiter, authController.resendOtp);
 
 export default router;

@@ -5,14 +5,14 @@ import { generateTokenAndSetCookie } from '../utils/jwt.utils.js';
 export const register = async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
-    const user = await authService.registerUser({ username, email, password });
+    const result = await authService.registerUser({ username, email, password });
 
-    generateTokenAndSetCookie(res, user._id);
+    // generateTokenAndSetCookie(res, user._id);
 
     res.status(201).json({
       success: true,
-      message: 'Account created successfully',
-      user,
+      message: result.message
+      // user,
     });
   } catch (error) {
     next(error); 
@@ -51,6 +51,34 @@ export const logout = (req, res) => {
 export const getMe = async (req, res, next) => {
   try {
     res.json({ success: true, user: req.user });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const verifyOtp = async (req, res, next) => {
+  try {
+    const { email, otp } = req.body;
+    const user = await authService.verifyUserOtp({ email, otp });
+
+    generateTokenAndSetCookie(res, user._id);
+
+    res.json({
+      success: true,
+      message: 'Email verified successfully',
+      user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const resendOtp = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    const result = await authService.resendUserOtp({ email });
+
+    res.json({ success: true, message: result.message });
   } catch (error) {
     next(error);
   }

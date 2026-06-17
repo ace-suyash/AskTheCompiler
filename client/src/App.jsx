@@ -11,6 +11,7 @@ import QuestionDetailPage from './pages/QuestionDetailPage.jsx';
 import AskQuestionPage from './pages/AskQuestionPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
+import VerifyOtpPage from './pages/VerifyOtpPage.jsx'; 
 import ProfilePage from './pages/ProfilePage.jsx';
 import InboxPage from './pages/InboxPage.jsx';
 import ConversationPage from './pages/ConversationPage.jsx';
@@ -55,6 +56,7 @@ export default function App() {
         {/* Auth pages */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/verify-otp" element={<VerifyOtpPage />} />  
 
         {/* Main app layout */}
         <Route path="/" element={<MainLayout><HomePage /></MainLayout>} />

@@ -52,14 +52,13 @@ export default function RegisterPage() {
 
     setLoading(true);
     try {
-      const { data } = await api.post('/auth/register', {
+      await api.post('/auth/register', {
         username: form.username,
         email: form.email,
         password: form.password,
       });
-      
-      setUser(data.user);
-      navigate('/');
+
+      navigate('/verify-otp', { state: { email: form.email } });
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed. Please try again.');
     } finally {
