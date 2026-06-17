@@ -29,7 +29,12 @@ export default function LoginPage() {
       setUser(data.user);
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed. Please try again.');
+      if(err.response && err.response.status === 403) {
+        navigate('/verify-otp', { state: { email: form.email } });
+      }
+      else {
+        setError(err.response?.data?.message || 'Login failed. Please try again.');
+      }
     } finally {
       setLoading(false);
     }

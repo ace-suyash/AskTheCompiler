@@ -250,6 +250,7 @@ export default function ProfilePage() {
             <input
               type="text"
               value={deleteConfirm}
+              onPaste={(e) => e.preventDefault()}
               onChange={(e) => setDeleteConfirm(e.target.value)}
               placeholder="DELETE"
               autoComplete="off"

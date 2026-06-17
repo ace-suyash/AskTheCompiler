@@ -8,7 +8,14 @@ export const registerUser = async ({ username, email, password }) => {
 
   const existingEmail = await User.findOne({ email: email.toLowerCase() });
   if (existingEmail) {
-    throw new ApiError(400, 'An account with that email already exists');
+    if(existingEmail.isVerified) {
+      throw new ApiError(400, 'An account with that email already exists');
+    }
+    existingEmail.username = username;
+    existingEmail.password = password;
+    await existingEmail.save();
+    await generateAndSendOtp(email);
+    return { message: 'OTP sent to your email. Please verify to complete registration.' };
   }
 
   const existingUsername = await User.findOne({ username });
