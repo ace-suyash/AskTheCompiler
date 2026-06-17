@@ -52,7 +52,7 @@ function AnswerCard({ answer, currentUser, questionAuthorId, onVote, onAccept, o
       {isReply && answer.replyTo?.author && (
         <div className="text-xs text-brand-500 mb-2">
           ↪ replying to{' '}
-          <Link to={`/users/${answer.replyTo.author._id}`} className="hover:underline">
+          <Link to={`/users/${answer.replyTo.author.username}`} className="hover:underline">
             @{answer.replyTo.author.username}
           </Link>
         </div>
@@ -88,7 +88,7 @@ function AnswerCard({ answer, currentUser, questionAuthorId, onVote, onAccept, o
           <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-800">
             <div className="text-xs text-gray-600">
               answered by{' '}
-              <Link to={`/users/${answer.author?._id}`} className="text-gray-400 hover:text-brand-500">
+              <Link to={`/users/${answer.author?.username}`} className="text-gray-400 hover:text-brand-500">
                 {answer.author?.username}
               </Link>
               {' · '}
@@ -282,7 +282,7 @@ export default function QuestionDetailPage() {
               {question.tags?.map(tag => <span key={tag} className="tag">{tag}</span>)}
               <div className="ml-auto text-xs text-gray-500">
                 asked by{' '}
-                <Link to={`/users/${question.author?._id}`} className="text-gray-400 hover:text-brand-500">
+                <Link to={`/users/${question.author?.username}`} className="text-gray-400 hover:text-brand-500">
                   {question.author?.username}
                 </Link>
               </div>

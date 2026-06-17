@@ -61,7 +61,7 @@ export default function App() {
         {/* Main app layout */}
         <Route path="/" element={<MainLayout><HomePage /></MainLayout>} />
         <Route path="/questions/:id" element={<MainLayout><QuestionDetailPage /></MainLayout>} />
-        <Route path="/users/:id" element={<MainLayout><ProfilePage /></MainLayout>} />
+        <Route path="/users/:username" element={<MainLayout><ProfilePage /></MainLayout>} />
 
         {/* Only users can ask */}
         <Route

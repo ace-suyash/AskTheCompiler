@@ -75,11 +75,11 @@ function TagInput({ tags, onChange }) {
 }
 
 const validateQuestion = (title, body, tags) => {
-  if (!title.trim() || title.trim().length < 15) {
-    return 'Title must be at least 15 characters. Be specific.';
+  if (!title.trim() || title.trim().length < 7) {
+    return 'Title must be at least 7 characters. Be specific.';
   }
-  if (!body.trim() || body.trim().length < 30) {
-    return 'Please add more detail to your question (min 30 characters).';
+  if (!body.trim() || body.trim().length < 20) {
+    return 'Please add more detail to your question (min 20 characters).';
   }
   const hasValidTag = tags.some(t => TECH_TAGS.includes(t.toLowerCase()));
   if (!hasValidTag) {

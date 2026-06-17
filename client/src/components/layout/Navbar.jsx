@@ -55,7 +55,7 @@ export default function Navbar() {
                 {/* username */}
 
                   <Link
-                      to={`/users/${user?._id}`}
+                      to={`/users/${user?.username}`}
                       className="btn-primary text-sm hidden sm:block hover:bg-green-500"
                     >
                       {user?.username}

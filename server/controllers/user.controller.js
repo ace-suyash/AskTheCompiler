@@ -2,9 +2,12 @@ import * as userService from '../services/user.service.js';
 
 export const getProfile = async (req, res, next) => {
   try {
-    const data = await userService.getUserProfile(req.params.id);
+    const { username } = req.params;
 
-    const isOwner = req.user && req.user._id.toString() === req.params.id;
+    const data = await userService.getUserProfile(username);
+
+    const isOwner = req.user && req.user.username === username;
+
     if (!isOwner) {
       delete data.user.email;
     }

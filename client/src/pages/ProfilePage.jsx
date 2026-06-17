@@ -55,7 +55,7 @@ function AnswerRow({ a }) {
 }
 
 export default function ProfilePage() {
-  const { id } = useParams();
+  const { username } = useParams();
   const { user: currentUser, isAuthenticated } = useAuthStore();
   const navigate = useNavigate();
 
@@ -71,7 +71,7 @@ export default function ProfilePage() {
     const fetchProfile = async () => {
       setLoading(true);
       try {
-        const { data } = await api.get(`/users/${id}`);
+        const { data } = await api.get(`/users/${username}`);
         setData(data);
       } catch (err) {
         console.error(err);
@@ -80,7 +80,7 @@ export default function ProfilePage() {
       }
     };
     fetchProfile();
-  }, [id]);
+  }, [username]);
 
   // start deleting process
   const openDeleteModal = () => {

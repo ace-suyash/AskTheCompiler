@@ -59,7 +59,7 @@ function QuestionCard({ question }) {
             ))}
             <span className="ml-auto text-xs text-gray-600 shrink-0">
               asked by{' '}
-              <Link to={`/users/${question.author?._id}`} className="text-gray-400 hover:text-brand-500">
+              <Link to={`/users/${question.author?.username}`} className="text-gray-400 hover:text-brand-500">
                 {question.author?.username}
               </Link>
               {' · '}

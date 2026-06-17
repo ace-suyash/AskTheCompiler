@@ -3,9 +3,15 @@ import Question from '../models/Question.models.js';
 import Answer from '../models/Answer.models.js';
 import { ApiError } from '../utils/ApiError.js';
 
-export const getUserProfile = async (userId) => {
-  const user = await User.findById(userId).select('-password');
+export const getUserProfile = async (username) => {
+  
+  const user = await User.findOne({ 
+    username: { $regex: new RegExp(`^${username}$`, 'i') } 
+  }).select('-password');
+
   if (!user) throw new ApiError(404, 'User not found');
+
+  const userId = user._id;
 
   const questions = await Question.find({ author: userId })
     .select('title tags upvotes downvotes views acceptedAnswer createdAt')

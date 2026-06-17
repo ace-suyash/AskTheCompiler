@@ -6,14 +6,14 @@ const questionSchema = new Schema(
       type: String,
       required: [true, 'Question title is required'],
       trim: true,
-      minlength: [15, 'Title must be at least 15 characters — be specific'],
+      minlength: [7, 'Title must be at least 7 characters — be specific'],
       maxlength: [150, 'Title cannot exceed 150 characters'],
     },
 
     body: {
       type: String,
       required: [true, 'Question body is required'],
-      minlength: [30, 'Please describe your question in more detail (min 30 characters)'],
+      minlength: [20, 'Please describe your question in more detail (min 20 characters)'],
     },
 
     tags: {

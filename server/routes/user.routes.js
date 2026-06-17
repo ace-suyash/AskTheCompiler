@@ -4,7 +4,7 @@ import { authMiddleware, optionalAuth } from '../middlewares/auth.middleware.js'
 
 const router = Router();
 
-router.get('/:id', optionalAuth, userController.getProfile);
+router.get('/:username', optionalAuth, userController.getProfile);
 
 router.delete('/me', authMiddleware, userController.deleteAccount);
 
