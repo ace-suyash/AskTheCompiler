@@ -53,3 +53,20 @@ export const voteQuestion = async (req, res, next) => {
     next(error);
   }
 };
+
+export const deleteQuestion = async (req, res, next) => {
+  try {
+    const questionId = req.params.id;
+    const userId = req.user._id; 
+
+    const question = await questionService.deleteQuestion(questionId, userId);
+    
+    res.status(200).json({ 
+      success: true, 
+      message: 'Question successfully deleted',
+      question 
+    });
+  } catch (error) {
+    next(error);
+  }
+};

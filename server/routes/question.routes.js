@@ -11,4 +11,6 @@ router.get('/:id', questionController.getQuestionById);
 router.post('/', authMiddleware, questionController.createQuestion);
 router.post('/:id/vote', authMiddleware, questionController.voteQuestion);
 
+router.delete('/:id', authMiddleware, questionController.deleteQuestion);
+
 export default router;

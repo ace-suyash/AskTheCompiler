@@ -1,7 +1,8 @@
 import Question from '../models/Question.models.js';
 import { ApiError } from '../utils/ApiError.js';
 import { isOnTopic } from './moderation.service.js';
-
+import User from '../models/User.models.js'; 
+import { cloudinary } from '../config/cloudinary.js';
 
 export const createQuestion = async ({ title, body, tags, authorId }) => {
   const moderation = isOnTopic(title, body);
@@ -123,4 +124,69 @@ export const voteQuestion = async (questionId, userId, voteType) => {
     { path: 'author', select: 'username profilePic reputation' },
     { path: 'acceptedAnswer' },
   ]);
+};
+
+const extractCloudinaryPublicId = (url) => {
+  try {
+    const parts = url.split('/upload/');
+    if (parts.length !== 2) return null;
+
+    let pathStr = parts[1]; 
+
+    if (pathStr.match(/^v\d+\//)) {
+      pathStr = pathStr.replace(/^v\d+\//, '');
+    }
+
+    const publicId = pathStr.split('.').slice(0, -1).join('.');
+    
+    return publicId;
+  } catch (error) {
+    console.error('Failed to extract public_id:', error);
+    return null;
+  }
+};
+
+export const deleteQuestion = async (questionId, userId) => {
+  const question = await Question.findById(questionId);
+  if (!question) {
+    throw new ApiError(404, 'Question not found');
+  }
+  if (question.author.toString() !== userId.toString()) {
+    throw new ApiError(403, 'You are not authorized to delete this question');
+  }
+
+  const dummyUser = await User.findOne({ username: 'deleted_user' });
+  if (!dummyUser) {
+    throw new ApiError(500, 'System configuration error: deleted_user not found');
+  }
+
+  const markdownImageRegex = /!\[.*?\]\((https:\/\/res\.cloudinary\.com\/[^\s)]+)\)/g;
+  
+  const matches = [...question.body.matchAll(markdownImageRegex)];
+
+  if (matches.length > 0) {
+    const deletePromises = matches.map(match => {
+      const url = match[1];
+      const publicId = extractCloudinaryPublicId(url);
+      
+      if (publicId) {
+        return cloudinary.uploader.destroy(publicId);
+      }
+      return Promise.resolve(); 
+    });
+
+    await Promise.allSettled(deletePromises);
+  }
+
+  const deletedMessage = '[Question has been deleted by the user]';// this works rn cuz the string passes the db model checks
+  
+  question.title = deletedMessage;
+  question.body = deletedMessage;
+  question.tags = ['deleted'];
+  question.author = dummyUser._id;
+  question.status = 'removed'; 
+
+  await question.save();
+
+  return question.populate('author', 'username profilePic reputation');
 };

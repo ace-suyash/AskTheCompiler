@@ -122,6 +122,9 @@ export default function QuestionDetailPage() {
   const [error, setError] = useState('');
   const [replyingTo, setReplyingTo] = useState(null); // { _id, username } of answer being replied to
 
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -173,6 +176,20 @@ export default function QuestionDetailPage() {
       }));
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const handleDeleteQuestion = async () => {
+    setIsDeleting(true);
+    try {
+      const { data } = await api.delete(`/questions/${id}`);
+      setQuestion(data.question); 
+     
+      setShowDeleteModal(false);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to delete question.');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -235,7 +252,18 @@ export default function QuestionDetailPage() {
 
       {/* Question */}
       <div className="card">
-        <h1 className="text-xl font-bold text-white mb-1">{question.title}</h1>
+        <div className="flex justify-between items-start mb-1">
+          <h1 className="text-xl font-bold text-white">{question.title}</h1>
+          {/*conditional Delete Button */}
+          {user?._id === question.author?._id && question.status !== 'removed' && (
+            <button
+              onClick={() => setShowDeleteModal(true)}
+              className="text-sm text-red-500 hover:text-red-400 transition-colors px-2 py-1 border border-transparent hover:border-red-900 rounded"
+            >
+              Delete
+            </button>
+          )}
+        </div>
         <div className="flex gap-4 text-xs text-gray-500 mb-4">
           <span>Asked {new Date(question.createdAt).toLocaleDateString()}</span>
           <span>Viewed {question.views} times</span>
@@ -325,7 +353,35 @@ export default function QuestionDetailPage() {
           </p>
         </div>
       )}
+      {/*Yes/No Deletion Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-900 border border-gray-700 rounded-lg p-6 max-w-sm w-full shadow-2xl text-center">
+            
+            <h3 className="text-lg font-bold text-white mb-6">
+              Are you sure that you want to delete the question?
+            </h3>
+            
+            <div className="flex justify-center gap-4">
+              <button
+                onClick={() => setShowDeleteModal(false)}
+                disabled={isDeleting}
+                className="px-6 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded transition-colors"
+              >
+                No
+              </button>
+              <button
+                onClick={handleDeleteQuestion}
+                disabled={isDeleting}
+                className="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded transition-colors disabled:opacity-50"
+              >
+                {isDeleting ? 'Deleting...' : 'Yes'}
+              </button>
+            </div>
 
+          </div>
+        </div>
+      )}
     </div>
   );
 }
