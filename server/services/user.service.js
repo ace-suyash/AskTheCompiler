@@ -79,6 +79,7 @@ export const deleteUserAccount = async (userId) => {
       email: `deleted_user_${Date.now()}@askthecompiler.local`,
       password: Math.random().toString(36).slice(2) + Date.now(),
       bio: 'This account has been deleted.',
+      isVerified: true,
     });
   }
 

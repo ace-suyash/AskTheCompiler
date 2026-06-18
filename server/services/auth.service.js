@@ -7,10 +7,15 @@ import { validateOtp } from './otp.service.js';
 export const registerUser = async ({ username, email, password }) => {
 
   const existingEmail = await User.findOne({ email: email.toLowerCase() });
+  const existingUsername = await User.findOne({ username });
   if (existingEmail) {
     if(existingEmail.isVerified) {
       throw new ApiError(400, 'An account with that email already exists');
     }
+    if (existingUsername.isVerified) {
+      throw new ApiError(400, 'That username is already taken');
+    }
+    
     existingEmail.username = username;
     existingEmail.password = password;
     await existingEmail.save();
@@ -18,7 +23,6 @@ export const registerUser = async ({ username, email, password }) => {
     return { message: 'OTP sent to your email. Please verify to complete registration.' };
   }
 
-  const existingUsername = await User.findOne({ username });
   if (existingUsername) {
     throw new ApiError(400, 'That username is already taken');
   }
