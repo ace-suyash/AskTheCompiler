@@ -14,6 +14,7 @@ import answerRoutes from './routes/answer.routes.js';
 import uploadRoutes from './routes/upload.routes.js';
 import userRoutes from './routes/user.routes.js';
 import messageRoutes from './routes/message.routes.js';
+import { cleanupUnverifiedUsers } from './jobs/cleanupUnverifiedUsers.js';
 
 dotenv.config();
 initCloudinary();
@@ -50,4 +51,16 @@ connectDB().then(() => {
     console.log(`\nAskTheCompiler API running on http://localhost:${PORT}`);
     console.log(`   Environment: ${process.env.NODE_ENV || 'development'}\n`);
   });
+// 24 hrs by default
+  const cleanupIntervalMs = Number(process.env.CLEANUP_INTERVAL_MS) || 24 * 60 * 60 * 1000;
+  if (cleanupIntervalMs > 0) {
+    cleanupUnverifiedUsers().catch((err) =>
+      console.error('[cleanup] Initial sweep failed:', err)
+    );
+    setInterval(() => {
+      cleanupUnverifiedUsers().catch((err) =>
+        console.error('[cleanup] Scheduled sweep failed:', err)
+      );
+    }, cleanupIntervalMs);
+  }
 });
