@@ -14,6 +14,7 @@ import answerRoutes from './routes/answer.routes.js';
 import uploadRoutes from './routes/upload.routes.js';
 import userRoutes from './routes/user.routes.js';
 import messageRoutes from './routes/message.routes.js';
+import notificationRoutes from './routes/notifications.routes.js';
 
 dotenv.config();
 initCloudinary();
@@ -42,6 +43,7 @@ app.use('/api/answers', answerRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/messages', messageRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 app.use(errorHandler);
 

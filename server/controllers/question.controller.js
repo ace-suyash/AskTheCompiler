@@ -1,4 +1,6 @@
 import * as questionService from '../services/question.service.js';
+import Question from '../models/Question.models.js';
+import { createNotification } from '../utils/createNotification.js';
 
 export const createQuestion = async (req, res, next) => {
   try {
@@ -48,6 +50,19 @@ export const voteQuestion = async (req, res, next) => {
       req.user._id,
       voteType
     );
+
+    if (voteType === 'up') {
+      const questionDoc = await Question.findById(req.params.id).select('author');
+      if (questionDoc) {
+        await createNotification({
+          recipient: questionDoc.author,
+          sender: req.user._id,
+          type: 'vote',
+          questionId: req.params.id,
+        });
+      }
+    }
+
     res.json({ success: true, question });
   } catch (error) {
     next(error);

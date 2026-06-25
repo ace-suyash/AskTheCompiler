@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore.js';
+import NotificationBell from '../NotificationBell.jsx';
 
 export default function Navbar() {
   const { user, isAuthenticated, logout } = useAuthStore();
@@ -52,6 +53,9 @@ export default function Navbar() {
                 </Link>
 
               <div className="flex items-center gap-5">
+
+                <NotificationBell />
+
                 {/* username */}
 
                   <Link

@@ -1,5 +1,6 @@
 
 import * as messageService from '../services/message.service.js';
+import { createNotification } from '../utils/createNotification.js';
 
 export const getInbox = async (req, res, next) => {
   try {
@@ -27,6 +28,14 @@ export const sendMessage = async (req, res, next) => {
       recipientId: req.params.userId,
       content,
     });
+
+    await createNotification({
+      recipient: req.params.userId,
+      sender: req.user._id,
+      type: 'message',
+      messageThreadUserId: req.user._id,
+    });
+
     res.status(201).json({ success: true, message });
   } catch (error) {
     next(error);

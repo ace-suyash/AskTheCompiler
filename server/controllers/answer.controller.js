@@ -1,4 +1,6 @@
 import * as answerService from '../services/answer.service.js';
+import Question from '../models/Question.models.js';
+import { createNotification } from '../utils/createNotification.js';
 
 export const getAnswersForQuestion = async (req, res, next) => {
   try {
@@ -18,6 +20,17 @@ export const addAnswer = async (req, res, next) => {
       authorId: req.user._id,
       replyTo: replyTo || null,
     });
+
+    const question = await Question.findById(req.params.questionId).select('author');
+    if (question) {
+      await createNotification({
+        recipient: question.author,
+        sender: req.user._id,
+        type: replyTo ? 'reply' : 'answer',
+        questionId: req.params.questionId,
+      });
+    }
+
     res.status(201).json({ success: true, answer });
   } catch (error) {
     next(error);
