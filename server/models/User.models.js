@@ -52,6 +52,9 @@ const userSchema = new Schema(
   },
   {
     timestamps: true,
+    indexes: [
+      { isVerified: 1, createdAt: 1 }, // for faster cleanup
+    ],
   }
 );
 
