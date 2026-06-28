@@ -16,7 +16,7 @@ export default function Sidebar() {
           {popularTags.map((tag) => (
             <button
               key={tag}
-              onClick={() => navigate(`/?tag=${tag}`)}
+              onClick={() => navigate(`/questions?tag=${tag}`)}
               className="tag"
             >
               {tag}

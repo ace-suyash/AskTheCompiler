@@ -6,6 +6,7 @@ import Navbar from './components/layout/Navbar.jsx';
 import Sidebar from './components/layout/Sidebar.jsx';
 
 
+import LandingPage from './pages/LandingPage.jsx';
 import HomePage from './pages/HomePage.jsx';
 import QuestionDetailPage from './pages/QuestionDetailPage.jsx';
 import AskQuestionPage from './pages/AskQuestionPage.jsx';
@@ -53,13 +54,16 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Landing page */}
+        <Route path="/" element={<LandingPage />} />
+
         {/* Auth pages */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/verify-otp" element={<VerifyOtpPage />} />  
 
         {/* Main app layout */}
-        <Route path="/" element={<MainLayout><HomePage /></MainLayout>} />
+        <Route path="/questions" element={<MainLayout><HomePage /></MainLayout>} />
         <Route path="/questions/:id" element={<MainLayout><QuestionDetailPage /></MainLayout>} />
         <Route path="/users/:username" element={<MainLayout><ProfilePage /></MainLayout>} />
 

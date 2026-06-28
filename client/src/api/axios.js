@@ -13,15 +13,13 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      
       import('../store/authStore.js').then(({ useAuthStore }) => {
+        const wasAuthenticated = useAuthStore.getState().isAuthenticated;
         useAuthStore.getState().clearUser();
+        if (wasAuthenticated) {
+          window.location.href = '/login';
+        }
       });
-
-      const authPaths = ['/login', '/register'];
-      if (!authPaths.includes(window.location.pathname)) {
-        window.location.href = '/login';
-      }
     }
     return Promise.reject(error);
   }

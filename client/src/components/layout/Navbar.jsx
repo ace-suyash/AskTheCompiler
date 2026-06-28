@@ -27,7 +27,7 @@ export default function Navbar() {
           onSubmit={(e) => {
             e.preventDefault();
             const q = e.target.search.value.trim();
-            if (q) navigate(`/?search=${encodeURIComponent(q)}`);
+            if (q) navigate(`/questions?search=${encodeURIComponent(q)}`);
           }}
         >
           <input
