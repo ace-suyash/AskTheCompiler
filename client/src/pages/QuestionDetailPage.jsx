@@ -206,7 +206,11 @@ export default function QuestionDetailPage() {
     if (!window.confirm('Are you sure you want to delete this answer?')) return;
     try {
       const { data } = await api.delete(`/answers/${answerId}`);
-      setAnswers(prev => prev.map(a => a._id === answerId ? data.answer : a));
+      if (data.deleted) {
+        setAnswers(prev => prev.filter(a => a._id !== answerId));
+      } else {
+        setAnswers(prev => prev.map(a => a._id === answerId ? data.answer : a));
+      }
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to delete answer.');
     }

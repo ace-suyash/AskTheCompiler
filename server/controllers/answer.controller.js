@@ -65,12 +65,11 @@ export const acceptAnswer = async (req, res, next) => {
 
 export const deleteAnswer = async (req, res, next) => {
   try {
-    const answer = await answerService.deleteAnswer(req.params.id, req.user._id);
-    res.status(200).json({
-      success: true,
-      message: 'Answer successfully deleted',
-      answer,
-    });
+    const result = await answerService.deleteAnswer(req.params.id, req.user._id);
+    if (result.deleted) {
+      return res.status(200).json({ success: true, deleted: true, answerId: req.params.id });
+    }
+    res.status(200).json({ success: true, message: 'Answer successfully deleted', answer: result });
   } catch (error) {
     next(error);
   }

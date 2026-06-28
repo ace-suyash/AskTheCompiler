@@ -149,11 +149,14 @@ export const deleteAnswer = async (answerId, userId) => {
     });
   }
 
-  answer.author = dummyUser._id;
   if (answer.replyTo) {
-    answer.replyTo = null;
+    await Answer.findByIdAndDelete(answerId);
+    return { deleted: true };
   }
 
+  const deletedMessage = '[Answer has been deleted by the user]';
+  answer.body = deletedMessage;
+  answer.author = dummyUser._id;
   await answer.save();
 
   return answer.populate('author', 'username profilePic reputation');
