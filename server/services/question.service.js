@@ -78,17 +78,31 @@ export const getAllQuestions = async ({
   };
 };
 
-export const getQuestionById = async (questionId) => {
-  const question = await Question.findByIdAndUpdate(
-    questionId,
-    { $inc: { views: 1 } },
-    { new: true }
-  )
-    .populate('author', 'username profilePic reputation bio')
-    .populate('acceptedAnswer');
+export const getQuestionById = async (questionId, userId = null) => {
+  let question;
+
+  if (userId) {
+    question = await Question.findOneAndUpdate(
+      { _id: questionId, viewers: { $ne: userId } },
+      { $addToSet: { viewers: userId }, $inc: { views: 1 } },
+      { new: true }
+    );
+
+    if (!question) {
+      question = await Question.findById(questionId);
+    }
+  } else {
+    question = await Question.findById(questionId);
+  }
 
   if (!question) throw new ApiError(404, 'Question not found');
-  return question;
+
+  const populated = await Question.populate(question, [
+    { path: 'author', select: 'username profilePic reputation bio' },
+    { path: 'acceptedAnswer' },
+  ]);
+
+  return populated;
 };
 
 export const voteQuestion = async (questionId, userId, voteType) => {
@@ -155,9 +169,15 @@ export const deleteQuestion = async (questionId, userId) => {
     throw new ApiError(403, 'You are not authorized to delete this question');
   }
 
-  const dummyUser = await User.findOne({ username: 'deleted_user' });
+  let dummyUser = await User.findOne({ username: 'deleted_user' });
   if (!dummyUser) {
-    throw new ApiError(500, 'System configuration error: deleted_user not found');
+    dummyUser = await User.create({
+      username: 'deleted_user',
+      email: `deleted_user_${Date.now()}@askthecompiler.local`,
+      password: Math.random().toString(36).slice(2) + Date.now(),
+      bio: 'This account has been deleted.',
+      isVerified: true,
+    });
   }
 
   const markdownImageRegex = /!\[.*?\]\((https:\/\/res\.cloudinary\.com\/[^\s)]+)\)/g;

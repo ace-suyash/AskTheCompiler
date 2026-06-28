@@ -2,6 +2,7 @@ import Answer from '../models/Answer.models.js';
 import Question from '../models/Question.models.js';
 import User from '../models/User.models.js';
 import { ApiError } from '../utils/ApiError.js';
+import { cloudinary } from '../config/cloudinary.js';
 
 export const getAnswersForQuestion = async (questionId) => {
   const answers = await Answer.find({ question: questionId })
@@ -106,4 +107,54 @@ export const acceptAnswer = async (answerId, requestingUserId) => {
 
   await Promise.all([answer.save(), question.save()]);
   return answer;
+};
+
+const extractCloudinaryPublicId = (url) => {
+  try {
+    const parts = url.split('/upload/');
+    if (parts.length !== 2) return null;
+
+    let pathStr = parts[1];
+
+    if (pathStr.match(/^v\d+\//)) {
+      pathStr = pathStr.replace(/^v\d+\//, '');
+    }
+
+    const publicId = pathStr.split('.').slice(0, -1).join('.');
+
+    return publicId;
+  } catch (error) {
+    console.error('Failed to extract public_id:', error);
+    return null;
+  }
+};
+
+export const deleteAnswer = async (answerId, userId) => {
+  const answer = await Answer.findById(answerId);
+  if (!answer) {
+    throw new ApiError(404, 'Answer not found');
+  }
+  if (answer.author.toString() !== userId.toString()) {
+    throw new ApiError(403, 'You are not authorized to delete this answer');
+  }
+
+  let dummyUser = await User.findOne({ username: 'deleted_user' });
+  if (!dummyUser) {
+    dummyUser = await User.create({
+      username: 'deleted_user',
+      email: `deleted_user_${Date.now()}@askthecompiler.local`,
+      password: Math.random().toString(36).slice(2) + Date.now(),
+      bio: 'This account has been deleted.',
+      isVerified: true,
+    });
+  }
+
+  answer.author = dummyUser._id;
+  if (answer.replyTo) {
+    answer.replyTo = null;
+  }
+
+  await answer.save();
+
+  return answer.populate('author', 'username profilePic reputation');
 };

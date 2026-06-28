@@ -38,7 +38,7 @@ function VoteButtons({ upvotes = [], downvotes = [], onVote, currentUserId }) {
   );
 }
 
-function AnswerCard({ answer, currentUser, questionAuthorId, onVote, onAccept, onReply }) {
+function AnswerCard({ answer, currentUser, questionAuthorId, onVote, onAccept, onReply, onDelete }) {
   const isAuthor = currentUser && answer.author?._id === currentUser._id;
   const isQuestionAuthor = currentUser && currentUser._id === questionAuthorId;
 
@@ -94,15 +94,24 @@ function AnswerCard({ answer, currentUser, questionAuthorId, onVote, onAccept, o
               {' · '}
               {new Date(answer.createdAt).toLocaleDateString()}
             </div>
-            {/* can only reply to others */}
-            {currentUser && !isReply && !isAuthor && (
-              <button
-                onClick={() => onReply(answer)}
-                className="text-xs text-gray-500 hover:text-brand-500 transition-colors"
-              >
-                ↪ Reply
-              </button>
-            )}
+            <div className="flex items-center gap-3">
+              {isAuthor && (
+                <button
+                  onClick={() => onDelete(answer._id)}
+                  className="text-xs text-red-500 hover:text-red-400 transition-colors"
+                >
+                  Delete
+                </button>
+              )}
+              {currentUser && !isReply && !isAuthor && (
+                <button
+                  onClick={() => onReply(answer)}
+                  className="text-xs text-gray-500 hover:text-brand-500 transition-colors"
+                >
+                  ↪ Reply
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -190,6 +199,16 @@ export default function QuestionDetailPage() {
       setError(err.response?.data?.message || 'Failed to delete question.');
     } finally {
       setIsDeleting(false);
+    }
+  };
+
+  const handleDeleteAnswer = async (answerId) => {
+    if (!window.confirm('Are you sure you want to delete this answer?')) return;
+    try {
+      const { data } = await api.delete(`/answers/${answerId}`);
+      setAnswers(prev => prev.map(a => a._id === answerId ? data.answer : a));
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to delete answer.');
     }
   };
 
@@ -306,6 +325,7 @@ export default function QuestionDetailPage() {
               onVote={handleAnswerVote}
               onAccept={handleAccept}
               onReply={handleReplyClick}
+              onDelete={handleDeleteAnswer}
             />
           ))}
         </div>

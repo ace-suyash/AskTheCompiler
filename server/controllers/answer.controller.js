@@ -62,3 +62,16 @@ export const acceptAnswer = async (req, res, next) => {
     next(error);
   }
 };
+
+export const deleteAnswer = async (req, res, next) => {
+  try {
+    const answer = await answerService.deleteAnswer(req.params.id, req.user._id);
+    res.status(200).json({
+      success: true,
+      message: 'Answer successfully deleted',
+      answer,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

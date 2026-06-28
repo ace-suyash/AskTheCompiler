@@ -13,4 +13,6 @@ router.post('/:id/vote', authMiddleware, answerController.voteAnswer);
 
 router.post('/:id/accept', authMiddleware, answerController.acceptAnswer);
 
+router.delete('/:id', authMiddleware, answerController.deleteAnswer);
+
 export default router;

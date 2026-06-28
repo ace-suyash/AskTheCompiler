@@ -35,7 +35,7 @@ export const getAllQuestions = async (req, res, next) => {
 
 export const getQuestionById = async (req, res, next) => {
   try {
-    const question = await questionService.getQuestionById(req.params.id);
+    const question = await questionService.getQuestionById(req.params.id, req.user?._id);
     res.json({ success: true, question });
   } catch (error) {
     next(error);
